@@ -1,0 +1,23 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+*~
+
+# Arduino Build & Upload Artifacts
+build/
+*.hex
+*.elf
+*.bin
+*.o
+*.d
+
+# Python / Tools Cache
+__pycache__/
+*.pyc
+*.pyo
+.matplotlib/
+
+# Intermediate layout drafts
+board_layout.png
