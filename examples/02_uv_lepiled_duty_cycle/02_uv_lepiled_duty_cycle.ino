@@ -1,8 +1,8 @@
 /*
- * Blinkfyr - Example 02: UV LepiLED Attractor Duty-Cycler & Camera Sync
- * https://github.com/rlwilmin-byte/Blinkfyr
+ * blinkfyr - Example 02: UV LepiLED Attractor Duty-Cycler & Camera Sync
+ * https://github.com/rlwilmin-byte/blinkfyr
  * 
- * Hardware: Blinkfyr (Arduino Uno + IRF520 MOSFET + LTV-4N35 Optocoupler)
+ * Hardware: blinkfyr (Arduino Uno + IRF520 MOSFET + LTV-4N35 Optocoupler)
  * 
  * Purpose:
  * Automates experimental duty cycling of high-power entomological UV insect

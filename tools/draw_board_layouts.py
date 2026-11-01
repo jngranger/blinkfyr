@@ -268,7 +268,7 @@ def draw_board_pane(ax, is_solder_side=True):
 draw_board_pane(ax_solder, is_solder_side=True)
 draw_board_pane(ax_comp, is_solder_side=False)
 
-plt.suptitle("Blinkfyr: Complete Dual-Pane Perfboard Layout (Jaycar HP9556)",
+plt.suptitle("blinkfyr: Complete Dual-Pane Perfboard Layout (Jaycar HP9556)",
              fontsize=15.5, fontweight='bold', y=0.98)
 plt.tight_layout(rect=[0, 0, 1, 0.95])
 

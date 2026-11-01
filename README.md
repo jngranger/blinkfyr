@@ -1,4 +1,4 @@
-# Blinkfyr
+# blinkfyr
 
 > **An open-source, programmable multimodal field synchronization beacon & high-power DC load driver for ecological research, bioacoustics, camera trapping, and insect light assays.**
 
@@ -11,19 +11,19 @@
 
 ## Field Prototype
 
-![Blinkfyr Field Prototype Enclosure](docs/images/prototype_enclosure.jpg)
-*Blinkfyr assembled in field enclosure: DC power input (9–15V), switched DC output jack, 4.0 kHz piezo sounder, drain status indicator LED, and external mode toggle switch.*
+![blinkfyr Field Prototype Enclosure](docs/images/prototype_enclosure.jpg)
+*blinkfyr assembled in field enclosure: DC power input (9–15V), switched DC output jack, 4.0 kHz piezo sounder, drain status indicator LED, and external mode toggle switch.*
 
 ---
 
 ## Overview
 
-**Blinkfyr** (*Swedish for "flashing beacon / lighthouse"*) is an adaptable, field-hardened hardware controller designed to solve two core challenges in field biology and nocturnal monitoring:
+**blinkfyr** (*Swedish for "flashing beacon / lighthouse"*) is an adaptable, field-hardened hardware controller designed to solve two core challenges in field biology and nocturnal monitoring:
 
-1. **Multimodal Sensor Synchronization**: Disparate field instruments—such as **Open Acoustic Devices AudioMoth** ultrasound loggers, nocturnal **infrared camera traps**, and visible optical sensors—experience internal real-time clock (RTC) drift. In dense forest understories or remote terrain where GPS time-synchronization is unavailable or power-prohibitive, logging devices diverge over hours and days. Blinkfyr emits simultaneous optical and acoustic beacons that create identical, high-contrast timestamps across all recording media.
-2. **High-Power DC Load Switching & Experimental Duty-Cycling**: Standard microcontroller timers cannot directly switch high-current or complex switch-mode loads. Blinkfyr provides a low-side power MOSFET stage driven by a dedicated optocoupler level-shifter. Operating over **9.0V to 15.0V DC** (12V SLA, 3S/4S Li-ion/$\text{LiFePO}_4$, or bench power), it reliably drives loads exceeding **1.5A** (such as high-power **UV LepiLED insect attractors** and **IR floodlights**) without gate-drive pinch-off, voltage sag, or driver brownout oscillation.
+1. **Multimodal Sensor Synchronization**: Disparate field instruments—such as **Open Acoustic Devices AudioMoth** ultrasound loggers, nocturnal **infrared camera traps**, and visible optical sensors—experience internal real-time clock (RTC) drift. In dense forest understories or remote terrain where GPS time-synchronization is unavailable or power-prohibitive, logging devices diverge over hours and days. blinkfyr emits simultaneous optical and acoustic beacons that create identical, high-contrast timestamps across all recording media.
+2. **High-Power DC Load Switching & Experimental Duty-Cycling**: Standard microcontroller timers cannot directly switch high-current or complex switch-mode loads. blinkfyr provides a low-side power MOSFET stage driven by a dedicated optocoupler level-shifter. Operating over **9.0V to 15.0V DC** (12V SLA, 3S/4S Li-ion/$\text{LiFePO}_4$, or bench power), it reliably drives loads exceeding **1.5A** (such as high-power **UV LepiLED insect attractors** and **IR floodlights**) without gate-drive pinch-off, voltage sag, or driver brownout oscillation.
 
-Essentially, Blinkfyr functions as an ultra-reliable, fully hackable field timer and multi-sensory sync beacon tailored for ecological research.
+Essentially, blinkfyr functions as an ultra-reliable, fully hackable field timer and multi-sensory sync beacon tailored for ecological research.
 
 ---
 
@@ -50,7 +50,7 @@ The repository includes two field-tested example sketches in the [`examples/`](e
 
 ## Circuit Schematic
 
-![Blinkfyr Electrical Schematic](docs/images/schematic.png)
+![blinkfyr Electrical Schematic](docs/images/schematic.png)
 
 ### Key Engineering Features:
 * **Optocoupler Level-Shifter (`LTV-4N35`)**: Boosts 5V Arduino logic to the full $+V_{\text{DC}}$ supply rail ($V_{GS} \approx 11.6\text{V}$ at 12V in). This drives the `IRF520` MOSFET into complete saturation ($R_{DS(on)} \le 0.27\,\Omega$), completely eliminating the voltage sag that causes constant-current buck/boost drivers to strobe.
@@ -68,7 +68,7 @@ The circuit is assembled on a single half of a **Jaycar HP9556** ("Ultra Mini Ex
 
 To avoid mirror-image wiring errors when assembling, the documentation provides synchronized views of both the **Component Side** (top) and **Solder Side** (copper tracks):
 
-![Blinkfyr Dual-Pane Board Layout](docs/images/board_layout_both_sides.png)
+![blinkfyr Dual-Pane Board Layout](docs/images/board_layout_both_sides.png)
 
 *Detailed step-by-step soldering checklist, component coordinates, and pre-flight multimeter tests are documented in [docs/BOARD_LAYOUT.md](docs/BOARD_LAYOUT.md).*
 
@@ -90,8 +90,8 @@ To avoid mirror-image wiring errors when assembling, the documentation provides 
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/rlwilmin-byte/Blinkfyr.git
-   cd Blinkfyr
+   git clone https://github.com/rlwilmin-byte/blinkfyr.git
+   cd blinkfyr
    ```
 2. **Open an Example in Arduino IDE**:
    * For periodic AudioMoth/camera sync: `examples/01_camera_audiomoth_sync/01_camera_audiomoth_sync.ino`

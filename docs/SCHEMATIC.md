@@ -1,12 +1,12 @@
-# Blinkfyr: Circuit Schematic & Theory of Operation
+# blinkfyr: Circuit Schematic & Theory of Operation
 
-**Blinkfyr** (*Swedish: "flashing beacon / lighthouse"*) is an open-source, programmable hardware driver and multimodal synchronization beacon designed for ecological field research, bioacoustics, camera trapping, and automated nocturnal light assays.
+**blinkfyr** (*Swedish: "flashing beacon / lighthouse"*) is an open-source, programmable hardware driver and multimodal synchronization beacon designed for ecological field research, bioacoustics, camera trapping, and automated nocturnal light assays.
 
 ---
 
 ## 1. Electrical Schematic
 
-![Blinkfyr Circuit Schematic](images/schematic.png)
+![blinkfyr Circuit Schematic](images/schematic.png)
 
 ---
 

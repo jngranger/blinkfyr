@@ -209,7 +209,7 @@ ax.add_patch(desc_box)
 ax.text(9.0, 0.45, "Common Ground Reference: PSU (-) | Arduino GND | Opto Cathode | MOSFET Source",
         ha='center', va='center', fontsize=8.5, fontweight='bold', color='#475569')
 
-ax.set_title("Blinkfyr: Multimodal Field Beacon & Programmable DC Load Driver — Electrical Schematic",
+ax.set_title("blinkfyr: Multimodal Field Beacon & Programmable DC Load Driver — Electrical Schematic",
              fontsize=14.5, fontweight='bold', pad=22, color='#0f172a')
 
 ax.set_xlim(-0.2, 18.8)

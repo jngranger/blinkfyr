@@ -1,6 +1,6 @@
-# Blinkfyr: Perfboard Assembly & Soldering Guide
+# blinkfyr: Perfboard Assembly & Soldering Guide
 
-This guide details the physical assembly of **Blinkfyr** on the **Jaycar HP9556 ("Ultra Mini Experimenters Board")** perfboard (`COREVA 300-2101`).
+This guide details the physical assembly of **blinkfyr** on the **Jaycar HP9556 ("Ultra Mini Experimenters Board")** perfboard (`COREVA 300-2101`).
 
 ---
 
@@ -8,7 +8,7 @@ This guide details the physical assembly of **Blinkfyr** on the **Jaycar HP9556 
 
 To eliminate confusion between inserting components on the top side and soldering pins on the bottom copper traces, the complete canonical layout is shown in two synchronized, horizontally mirrored views:
 
-![Blinkfyr Dual-Pane Board Layout](images/board_layout_both_sides.png)
+![blinkfyr Dual-Pane Board Layout](images/board_layout_both_sides.png)
 
 ### Understanding the Views:
 * **Right Pane (`2. COMPONENT SIDE`)**:

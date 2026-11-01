@@ -1,8 +1,8 @@
 /*
- * Blinkfyr - Example 01: Multimodal Camera & AudioMoth Time-Sync Beacon
- * https://github.com/rlwilmin-byte/Blinkfyr
+ * blinkfyr - Example 01: Multimodal Camera & AudioMoth Time-Sync Beacon
+ * https://github.com/rlwilmin-byte/blinkfyr
  * 
- * Hardware: Blinkfyr (Arduino Uno + IRF520 MOSFET + LTV-4N35 Optocoupler)
+ * Hardware: blinkfyr (Arduino Uno + IRF520 MOSFET + LTV-4N35 Optocoupler)
  * 
  * Purpose:
  * Synchronizes ultrasonic audio recorders (e.g. Open Acoustic Devices AudioMoth)

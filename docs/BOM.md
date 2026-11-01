@@ -1,6 +1,6 @@
-# Blinkfyr: Bill of Materials (BOM) & Parts List
+# blinkfyr: Bill of Materials (BOM) & Parts List
 
-This document lists all components, specifications, and vendor codes required to build the **Blinkfyr** multimodal synchronization beacon and programmable DC load driver.
+This document lists all components, specifications, and vendor codes required to build the **blinkfyr** multimodal synchronization beacon and programmable DC load driver.
 
 ---
 
