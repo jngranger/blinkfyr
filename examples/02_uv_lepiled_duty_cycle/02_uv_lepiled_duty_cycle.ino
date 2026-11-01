@@ -1,34 +1,44 @@
 /*
- * AudiomothDutyCycle.ino
+ * Blinkfyr - Example 02: UV LepiLED Attractor Duty-Cycler & Camera Sync
+ * https://github.com/rlwilmin-byte/Blinkfyr
  * 
- * Duty-Cycle Interval Controller for IR LED + UV LepiLED and AudioMoth sync.
+ * Hardware: Blinkfyr (Arduino Uno + IRF520 MOSFET + LTV-4N35 Optocoupler)
+ * 
+ * Purpose:
+ * Automates experimental duty cycling of high-power entomological UV insect
+ * attractors (e.g. Gunnar Brehm UV LepiLED, ~1.1A) and night-vision IR floodlamps
+ * for nocturnal insect flight and arrival behavior experiments.
  *
- * Behavior:
- * - Alternates between ON state and OFF state continuously.
- *   - ON state:  Pin 8 HIGH (12V DC output ON to IR & UV lights, indicator LED ON). No buzzer.
- *   - OFF state: Pin 8 LOW  (12V DC output OFF, indicator LED OFF). No buzzer.
+ * How it works:
+ * - Alternates continuously between ON state and OFF state:
+ *   - ON state:  Switched DC output ON (UV LepiLED + IR floodlamp + drain indicator LED). Silent.
+ *   - OFF state: Switched DC output OFF (UV and IR lights dark, indicator LED off). Silent.
+ * - By splitting the output to both a UV attractor and an IR floodlamp, nocturnal
+ *   wildlife/security cameras can visually record the exact moment the attractor state
+ *   changes, while providing illumination to observe moth arrivals.
  *
- * Timing Modes (Toggled by Button on Pin 2):
+ * Operating Modes (Toggled by Tactile Button on Pin 2):
  * - Mode 1 (Default): 3-minute intervals (3 min ON, 3 min OFF, repeating).
- *   - Audio confirmation when entering this mode: 3 one-second chirps (1.0s ON, 0.5s OFF x 3).
+ *   - Audio confirmation when entering this mode: 3 one-second chirps (1.0s ON, 0.5s pause x 3).
  * - Mode 2: 15-second intervals (15 sec ON, 15 sec OFF, repeating).
- *   - Audio confirmation when entering this mode: 5 short chirps (120ms ON, 100ms OFF x 5).
+ *   - Audio confirmation when entering this mode: 5 short chirps (120ms ON, 100ms pause x 5).
  *
  * Startup / Mode Change:
  * - Always starts immediately in the ON state.
- * - Button on Pin 2 switches between 3-minute mode and 15-second mode.
- * - Changing modes resets the cycle timer and starts immediately in the ON state with the confirmation beeps.
+ * - Pressing the button toggles between 3-minute mode and 15-second mode.
+ * - Switching modes resets the cycle timer and immediately starts in the ON state
+ *   with corresponding audio confirmation chirps.
  *
- * Hardware Pin Connections (No hardware changes required):
- * - OUTPUT_PIN = 8  (To Optocoupler input -> MOSFET Gate -> 12V DC Out & Indicator LED)
- * - BUZZER_PIN = 9  (To PKM22EPP-40 piezo buzzer, 4.0 kHz square wave)
- * - BUTTON_PIN = 2  (To momentary push button to GND, INPUT_PULLUP)
+ * Pin Map:
+ * - Pin 8: Switched DC Output (via LTV-4N35 Optocoupler -> IRF520 Gate)
+ * - Pin 9: Piezo Buzzer (PKM22EPP-40, 4.0 kHz)
+ * - Pin 2: Tactile Pushbutton to GND (internal pullup)
  */
 
-const uint8_t OUTPUT_PIN = 8;    // Optocoupler input -> MOSFET Gate -> 12V DC Out & Indicator LED
-const uint8_t BUZZER_PIN = 9;    // PKM22EPP-40 passive piezo buzzer
-const uint8_t BUTTON_PIN = 2;    // Push button to GND (internal pullup)
-const unsigned int BUZZER_FREQ_HZ = 4000; // 4.0 kHz resonant frequency
+const uint8_t OUTPUT_PIN = 8;    // To optocoupler input -> MOSFET Gate -> Switched DC Load
+const uint8_t BUZZER_PIN = 9;    // To PKM22EPP-40 passive piezo buzzer
+const uint8_t BUTTON_PIN = 2;    // Tactile button between Pin 2 and GND
+const unsigned int BUZZER_FREQ_HZ = 4000; // 4.0 kHz acoustic resonant frequency
 
 // Timing intervals
 const unsigned long INTERVAL_3_MIN_MS  = 3UL * 60UL * 1000UL; // 180,000 ms (3 minutes)
@@ -52,7 +62,7 @@ unsigned long lastDebounceTime = 0;
 // Non-blocking Buzzer Chirp Player
 // Pattern arrays store durations: [ON, OFF, ON, OFF, ...] in milliseconds
 const unsigned long CHIRP_3MIN_MODE[] = {
-  1000UL, 500UL, 1000UL, 500UL, 1000UL // 3 one-second chirps (1s on, 0.5s pause, 1s on, 0.5s pause, 1s on)
+  1000UL, 500UL, 1000UL, 500UL, 1000UL // 3 one-second chirps (1s on, 0.5s pause x 3)
 };
 const uint8_t CHIRP_3MIN_LEN = sizeof(CHIRP_3MIN_MODE) / sizeof(CHIRP_3MIN_MODE[0]);
 
@@ -136,7 +146,7 @@ void setup() {
 void loop() {
   unsigned long now = millis();
 
-  // 1. Process non-blocking buzzer chirps (plays in background, does not block loop)
+  // 1. Process non-blocking buzzer chirps in background
   updateBuzzer(now);
 
   // 2. Read and debounce mode button on Pin 2

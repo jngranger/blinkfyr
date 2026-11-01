@@ -49,9 +49,9 @@ def draw_resistor(x, y, orient='h', length=1.4, label='R', val='1kΩ'):
 Y_12V = 10.0
 Y_GND = 1.0
 
-# +12V Rail
+# +DC Power Rail (+9V to +15V)
 draw_wire([(0.5, Y_12V), (17.5, Y_12V)], color=COLOR_12V, lw=3.2)
-ax.text(0.3, Y_12V, "+12V DC IN\n(Bench Supply)", ha='right', va='center', fontsize=10, fontweight='bold', color=COLOR_12V)
+ax.text(0.3, Y_12V, "+9V to +15V DC IN\n(PSU / 12V Battery)", ha='right', va='center', fontsize=10, fontweight='bold', color=COLOR_12V)
 
 # GND Rail
 draw_wire([(0.5, Y_GND), (17.5, Y_GND)], color=COLOR_GND, lw=3.2)
@@ -197,8 +197,8 @@ load_box = patches.FancyBboxPatch((16.2, 4.4), 2.2, 2.0, boxstyle="round,pad=0.1
                                  facecolor='#faf5ff', edgecolor='#9333ea', lw=2.0, zorder=3)
 ax.add_patch(load_box)
 ax.text(17.3, 5.8, "EXTERNAL LOADS\n(via DC Splitter)", ha='center', va='center', fontsize=8.0, fontweight='bold', color='#7e22ce')
-ax.text(17.3, 5.0, "• 12V IR 4-LED Array (~0.4A)\n• 12V UV LepiLED (~1.1A)\nTotal Load: ~1.5A @ 12.5V",
-        ha='center', va='center', fontsize=7.4, color='#3b0764')
+ax.text(17.3, 5.0, "• 12V IR 4-LED Array (~0.4A)\n• 12V UV LepiLED (~1.1A)\n• Any 9-15V DC Load (<=5A)\nTotal Test Load: ~1.5A @ 12.5V",
+        ha='center', va='center', fontsize=7.2, color='#3b0764')
 
 draw_wire([(17.25, 7.0), (17.25, 6.5)], color='#9333ea', lw=2.0)
 
@@ -206,10 +206,10 @@ draw_wire([(17.25, 7.0), (17.25, 6.5)], color='#9333ea', lw=2.0)
 desc_box = patches.FancyBboxPatch((0.5, 0.2), 17.0, 0.5, boxstyle="square,pad=0.0",
                                   facecolor='#f1f5f9', edgecolor='none', zorder=1)
 ax.add_patch(desc_box)
-ax.text(9.0, 0.45, "Common Ground Reference: Bench PSU (-) | Arduino GND | Opto Cathode | MOSFET Source",
+ax.text(9.0, 0.45, "Common Ground Reference: PSU (-) | Arduino GND | Opto Cathode | MOSFET Source",
         ha='center', va='center', fontsize=8.5, fontweight='bold', color='#475569')
 
-ax.set_title("Arduino Sync Beeper & 12V High-Power Optical Driver — Electrical Schematic",
+ax.set_title("Blinkfyr: Multimodal Field Beacon & Programmable DC Load Driver — Electrical Schematic",
              fontsize=14.5, fontweight='bold', pad=22, color='#0f172a')
 
 ax.set_xlim(-0.2, 18.8)
