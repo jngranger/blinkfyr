@@ -1,115 +1,115 @@
 # blinkfyr
 
-> **An open-source, programmable multimodal field synchronization beacon & high-power DC load driver for ecological research, bioacoustics, camera trapping, and insect light assays.**
+A simple DIY Arduino-controlled switch and sync beeper for field gear (cameras, AudioMoths, 12V IR floodlights, and UV bug lights).
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Platform: Arduino Uno](https://img.shields.io/badge/Platform-Arduino%20Uno-00979D.svg)](https://www.arduino.cc/)
-[![Voltage: 9V--15V DC](https://img.shields.io/badge/Voltage-9V--15V%20DC-blue.svg)](docs/SCHEMATIC.md)
-[![Load: >1.5A Continuous](https://img.shields.io/badge/Load->1.5A%20Continuous-orange.svg)](docs/SCHEMATIC.md)
+![blinkfyr Prototype Enclosure](docs/images/prototype_enclosure.jpg)
 
 ---
 
-## Field Prototype
+## What is this?
 
-![blinkfyr Field Prototype Enclosure](docs/images/prototype_enclosure.jpg)
-*blinkfyr assembled in field enclosure: DC power input (9–15V), switched DC output jack, 4.0 kHz piezo sounder, drain status indicator LED, and external mode toggle switch.*
+**blinkfyr** (*Swedish for "blinking beacon / lighthouse"*) is a small, hacky DIY project built around an Arduino Uno, a power MOSFET, an optocoupler, and a piezo beeper. 
 
----
-
-## Overview
-
-**blinkfyr** (*Swedish for "flashing beacon / lighthouse"*) is an adaptable, field-hardened hardware controller designed to solve two core challenges in field biology and nocturnal monitoring:
-
-1. **Multimodal Sensor Synchronization**: Disparate field instruments—such as **Open Acoustic Devices AudioMoth** ultrasound loggers, nocturnal **infrared camera traps**, and visible optical sensors—experience internal real-time clock (RTC) drift. In dense forest understories or remote terrain where GPS time-synchronization is unavailable or power-prohibitive, logging devices diverge over hours and days. blinkfyr emits simultaneous optical and acoustic beacons that create identical, high-contrast timestamps across all recording media.
-2. **High-Power DC Load Switching & Experimental Duty-Cycling**: Standard microcontroller timers cannot directly switch high-current or complex switch-mode loads. blinkfyr provides a low-side power MOSFET stage driven by a dedicated optocoupler level-shifter. Operating over **9.0V to 15.0V DC** (12V SLA, 3S/4S Li-ion/$\text{LiFePO}_4$, or bench power), it reliably drives loads exceeding **1.5A** (such as high-power **UV LepiLED insect attractors** and **IR floodlights**) without gate-drive pinch-off, voltage sag, or driver brownout oscillation.
-
-Essentially, blinkfyr functions as an ultra-reliable, fully hackable field timer and multi-sensory sync beacon tailored for ecological research.
+It was originally built to synchronize an **AudioMoth** ultrasound recorder with an infrared wildlife camera, but it works as a general-purpose programmable switch for any 9V–15V DC gear you want to automate in the field (like a customizable Christmas light timer for ecological experiments).
 
 ---
 
-## Example Use Cases
+## Why build it?
 
-The repository includes two field-tested example sketches in the [`examples/`](examples/) directory:
+1. **Time-syncing different recorders**:
+   Audio recorders and trail cameras usually drift out of sync over time, and getting GPS time under heavy tree cover can be tough or power-hungry. By flashing an IR light and beeping a loud chirp at the exact same instant, your cameras (video frame flash) and AudioMoths (audio spectrogram mark) get identical time markers so you can line up files later.
+2. **Switching heavy 12V DC loads**:
+   Standard Arduino pins only put out 5V and max out at 20–40 mA. To run 12V gear like an IR illuminator (~0.4A) or a high-power UV insect attractor (like a Gunnar Brehm LepiLED, ~1.1A), you need a MOSFET switch.
+3. **Why the optocoupler?**:
+   Common MOSFETs like the `IRF520` need ~10V on their gate to fully turn on. If you drive them straight from a 5V Arduino pin, the MOSFET only partially opens. That might work for small loads, but when running heavier gear (like the LepiLED), the voltage drops across the MOSFET and starves the load, causing the light's internal driver to rapidly blink/strobe. Adding a cheap `LTV-4N35` optocoupler lets the 5V Arduino pin switch the full 12V supply rail right into the MOSFET gate so it opens all the way with zero flickering.
 
-### [Example 01: Multimodal Camera & AudioMoth Time-Sync Beacon](examples/01_camera_audiomoth_sync/01_camera_audiomoth_sync.ino)
-* **Goal**: Synchronize AudioMoth acoustic/ultrasound recordings with nocturnal IR video footage.
-* **Operation**:
-  * Fires a **single 1.0-second sync pulse every 30 minutes** on a rollover-safe, drift-free `millis()` schedule.
-  * Fires **three 1.0-second sync pulses** (1s ON, 1s OFF, 1s ON, 1s OFF, 1s ON) on power-up boot and on-demand whenever the tactile button is pressed.
-  * **Multimodal Marker**: The 12V IR floodlamp illuminates the camera frame with a sharp brightness step, while the $4.0\text{ kHz}$ resonant piezo sounder produces a sharp acoustic burst registered on the AudioMoth spectrogram, enabling sub-millisecond post-hoc alignment.
+---
 
-### [Example 02: UV LepiLED Attractor Duty-Cycler & Camera Sync](examples/02_uv_lepiled_duty_cycle/02_uv_lepiled_duty_cycle.ino)
-* **Goal**: Automate experimental insect arrival assays using a high-power UV light trap (Gunnar Brehm UV LepiLED, ~1.1A) while providing video state-markers.
-* **Operation**:
-  * Alternates continuously between **ON** (UV light ON + IR floodlamp ON + indicator LED ON) and **OFF** (all silent and dark).
-  * **Default Mode (3-Minute Cycle)**: Starts in the ON state with **3 long 1-second chirps**, cycling 3 min ON / 3 min OFF indefinitely.
-  * **Button Toggle (15-Second Cycle)**: Pressing the tactile button switches to a **15-second cycle** (15s ON / 15s OFF), immediately resetting into the ON state with **5 short confirmation chirps**. Pressing the button again toggles back to the 3-minute mode.
-  * **Camera Correlation**: The simultaneous IR floodlamp flash informs the camera of the exact attractor transition timestamps to correlate insect arrivals with attractor state.
+## Example Arduino Sketches
+
+Two ready-to-flash examples are in the [`examples/`](examples/) folder:
+
+### 1. [Camera & AudioMoth Time-Sync Beacon](examples/01_camera_audiomoth_sync/01_camera_audiomoth_sync.ino)
+* **What it does**: 
+  * Flashes the 12V output and beeps a 1-second pulse once every **30 minutes**.
+  * Boots with 3 pulses so you know it's alive and can mark when you started the run.
+  * Pressing the button on the board triggers 3 pulses anytime on demand without messing up the 30-minute timer.
+* **Use case**: Put it in front of your camera trap and AudioMoth to leave periodic audio/visual sync marks throughout long recording sessions.
+
+### 2. [UV LepiLED Duty-Cycler & Cam Sync](examples/02_uv_lepiled_duty_cycle/02_uv_lepiled_duty_cycle.ino)
+* **What it does**: 
+  * Alternates between ON and OFF continuously.
+  * **Default (3-minute cycle)**: Starts in the ON state with 3 beeps, then runs 3 min ON, 3 min OFF, repeating.
+  * **Button toggle (15-second cycle)**: Pressing the button beeps 5 short chirps and switches to 15s ON, 15s OFF. Pressing it again switches back to 3-minute mode.
+  * Silent during steady ON and OFF periods (beeps only when switching modes or booting).
+* **Use case**: Comparing moth arrival rates under different lighting schedules while using the IR flash to let a night camera track exact on/off timestamps.
 
 ---
 
 ## Circuit Schematic
 
-![blinkfyr Electrical Schematic](docs/images/schematic.png)
+![blinkfyr Schematic](docs/images/schematic.png)
 
-### Key Engineering Features:
-* **Optocoupler Level-Shifter (`LTV-4N35`)**: Boosts 5V Arduino logic to the full $+V_{\text{DC}}$ supply rail ($V_{GS} \approx 11.6\text{V}$ at 12V in). This drives the `IRF520` MOSFET into complete saturation ($R_{DS(on)} \le 0.27\,\Omega$), completely eliminating the voltage sag that causes constant-current buck/boost drivers to strobe.
-* **Acoustic Penetration (`PKM22EPP-40`)**: Murata passive piezo driven at its acoustic resonant peak ($4.0\text{ kHz}$) via Arduino `tone()`, yielding $>80\text{ dB}$ SPL output with $<5\text{ mA}$ current draw.
-* **Inductive Spike Clamping (`1N4004`)**: Flyback diode across the DC output absorbs inductive kickback from long field cable runs and switch-mode driver coils.
-* **Visual Drain Monitor**: Built-in green LED provides positive confirmation whenever the MOSFET drain conducts to ground.
+### Key connections:
+* **Arduino Pin 8**: Sends 5V signal through a 560Ω resistor to the optocoupler input (Pins 1 & 2).
+* **Optocoupler Pin 5**: Connected to +12V power rail.
+* **Optocoupler Pin 4**: Outputs switched 12V through a 220Ω resistor to the `IRF520` MOSFET gate.
+* **MOSFET Gate**: Pulled down to GND with a 10kΩ resistor so it stays off when Pin 8 is LOW.
+* **MOSFET Drain**: Switches the negative side of the DC output jack.
+* **Flyback Diode (1N4004)**: Placed across the DC output (band to +12V) to clamp inductive spikes.
+* **Drain LED**: A small indicator LED with a 1kΩ resistor wired between +12V and Drain so you can see when the switch is active.
+* **Piezo Sounder (PKM22EPP-40)**: Driven on Arduino Pin 9 with `tone(9, 4000)`. 4.0 kHz is its resonant frequency, so it gives maximum volume with very little current.
+* **Pushbutton**: Wired between Arduino Pin 2 and GND using Arduino's built-in `INPUT_PULLUP`.
 
-*Complete electrical analysis, voltage math, and component dissipation calculations can be found in [docs/SCHEMATIC.md](docs/SCHEMATIC.md).*
-
----
-
-## Board Layout & Assembly
-
-The circuit is assembled on a single half of a **Jaycar HP9556** ("Ultra Mini Experimenters Board") perfboard (`COREVA 300-2101`). 
-
-To avoid mirror-image wiring errors when assembling, the documentation provides synchronized views of both the **Component Side** (top) and **Solder Side** (copper tracks):
-
-![blinkfyr Dual-Pane Board Layout](docs/images/board_layout_both_sides.png)
-
-*Detailed step-by-step soldering checklist, component coordinates, and pre-flight multimeter tests are documented in [docs/BOARD_LAYOUT.md](docs/BOARD_LAYOUT.md).*
+*Detailed schematic notes can be found in [docs/SCHEMATIC.md](docs/SCHEMATIC.md).*
 
 ---
 
-## Pin Connections Summary
+## Perfboard Layout
 
-| Arduino Pin | Hardware Component | Function |
-| :---: | :--- | :--- |
-| **`VIN`** | $+9\text{V}$ to $+15\text{V}$ DC Power Rail | Powers Arduino onboard 5V linear regulator. |
-| **`GND`** | Common Ground ($0\text{V}$) Rail | Shared ground reference for PSU, MOSFET Source, and Opto Cathode. |
-| **`Pin 8`** | `LTV-4N35` Opto Pin 1 (via $560\,\Omega$ resistor) | Active HIGH (5V) triggers full-rail gate drive to MOSFET. |
-| **`Pin 9`** | `PKM22EPP-40` Piezo Sounder (+) | Generates $4.0\text{ kHz}$ resonant square wave via `tone()`. |
-| **`Pin 2`** | Tactile Pushbutton to GND | Configured with internal `INPUT_PULLUP` for debounce. |
+The prototype was soldered on a standard Jaycar HP9556 experimenter board. Because looking at copper traces on the back while inserting parts on the front gets confusing, here are both sides drawn out side-by-side:
+
+![blinkfyr Board Layout](docs/images/board_layout_both_sides.png)
+
+*Step-by-step soldering checklist and multimeter checks are in [docs/BOARD_LAYOUT.md](docs/BOARD_LAYOUT.md).*
+
+---
+
+## Parts List
+
+| Part | Value / Model | Purpose |
+| :--- | :--- | :--- |
+| **Microcontroller** | Arduino Uno | Runs the timing logic (powered via `VIN` from 9V–15V). |
+| **MOSFET** | IRF520 (N-Channel, TO-220) | Switches the ground side of your 12V gear. |
+| **Optocoupler** | LTV-4N35 (6-pin DIP) | Uses 5V from Pin 8 to switch 12V onto the MOSFET gate. |
+| **Piezo Buzzer** | PKM22EPP-40 (Murata passive) | 4.0 kHz acoustic sync tone. |
+| **Flyback Diode** | 1N4004 | Clamps kickback from inductive loads / long wires. |
+| **Indicator LED** | Standard 3mm/5mm Green LED | Lights up whenever the MOSFET drain is conducting. |
+| **Tactile Button** | Standard 6x6mm momentary button | Manual trigger & mode switching. |
+| **Resistor R_in** | 560 Ω (or 1.0 kΩ) | Limits current into optocoupler LED (~7 mA). |
+| **Resistor R_gate**| 220 Ω | Gate damping resistor. |
+| **Resistor R_pd** | 10 kΩ | Pull-down resistor on gate to keep it off when idle. |
+| **Resistor R_led** | 1.0 kΩ | Current limiter for indicator LED on 12V rail. |
+| **Power Jacks** | 2.1mm DC barrel jacks | Power input and switched DC output. |
+| **Perfboard** | Jaycar HP9556 (or similar) | Prototyping board. |
+
+*Full component inventory and resistor color bands are in [docs/BOM.md](docs/BOM.md).*
 
 ---
 
 ## Quickstart
 
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/rlwilmin-byte/blinkfyr.git
-   cd blinkfyr
-   ```
-2. **Open an Example in Arduino IDE**:
-   * For periodic AudioMoth/camera sync: `examples/01_camera_audiomoth_sync/01_camera_audiomoth_sync.ino`
-   * For insect attractor duty-cycling: `examples/02_uv_lepiled_duty_cycle/02_uv_lepiled_duty_cycle.ino`
-3. **Upload**: Connect your Arduino Uno via USB and click **Upload** ($\rightarrow$).
-4. **Deploy**: Connect your 9V–15V power source (battery or bench PSU) and plug your 12V optical loads into the DC barrel jack.
+1. Flash your chosen sketch using the Arduino IDE:
+   * Periodic camera/audio sync: `examples/01_camera_audiomoth_sync/01_camera_audiomoth_sync.ino`
+   * Attractor duty cycler: `examples/02_uv_lepiled_duty_cycle/02_uv_lepiled_duty_cycle.ino`
+2. Wire up the board according to the [layout guide](docs/BOARD_LAYOUT.md) and check your connections with a multimeter before plugging into power.
+3. Plug in 9V–15V DC power (bench PSU, 12V battery, etc.) into the power input jack.
+4. Plug your 12V loads (IR illuminator, UV light, etc.) into the switched DC output jack.
 
----
-
-## Documentation Links
-
-* [Bill of Materials & Parts List](docs/BOM.md)
-* [Circuit Schematic & Theory of Operation](docs/SCHEMATIC.md)
-* [Board Layout & Soldering Guide](docs/BOARD_LAYOUT.md)
-* [Complete Workshop Inventory](docs/WORKSHOP_INVENTORY.md)
+*(Tip: If using a security IR floodlamp that has a built-in daylight sensor dome on the front, stick a piece of black electrical tape over it so it fires in bright rooms during testing!)*
 
 ---
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE) — see the [LICENSE](LICENSE) file for details.
+[MIT License](LICENSE) — Feel free to use, modify, or adapt this for your own projects!
