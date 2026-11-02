@@ -110,6 +110,12 @@ The prototype was soldered on a standard Jaycar HP9556 experimenter board. Becau
 
 ---
 
+## Acknowledgments
+
+Developed with pair-programming assistance from **Google DeepMind's Antigravity (Gemini)** for circuit troubleshooting, schematic generation, and firmware drafting.
+
+---
+
 ## License
 
 [MIT License](LICENSE) — Feel free to use, modify, or adapt this for your own projects!
