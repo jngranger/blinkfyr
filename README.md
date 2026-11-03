@@ -44,6 +44,14 @@ Two ready-to-flash examples are in the [`examples/`](examples/) folder:
   * Silent during steady ON and OFF periods (beeps only when switching modes or booting).
 * **Use case**: Comparing moth arrival rates under different lighting schedules while using the IR flash to let a night camera track exact on/off timestamps.
 
+### 3. [Manual AudioMoth & Camera Sync Beacon](examples/03_manual_audiomoth_sync/03_manual_audiomoth_sync.ino)
+* **What it does**:
+  * Completely on-demand manual sync.
+  * Boots completely silent and dark (no startup beeps or flashes).
+  * No automatic periodic timer.
+  * Whenever you press the button, it fires a sequence of **three 0.5-second pulses** (0.5s ON, 0.5s OFF x 3) and returns to silent idle.
+* **Use case**: Great when you want to drop sync marks manually at the start and end of an observation run without any periodic beeps disturbing the site.
+
 ---
 
 ## Circuit Schematic
@@ -102,6 +110,7 @@ The prototype was soldered on a standard Jaycar HP9556 experimenter board. Becau
 1. Flash your chosen sketch using the Arduino IDE:
    * Periodic camera/audio sync: `examples/01_camera_audiomoth_sync/01_camera_audiomoth_sync.ino`
    * Attractor duty cycler: `examples/02_uv_lepiled_duty_cycle/02_uv_lepiled_duty_cycle.ino`
+   * Manual on-demand sync: `examples/03_manual_audiomoth_sync/03_manual_audiomoth_sync.ino`
 2. Wire up the board according to the [layout guide](docs/BOARD_LAYOUT.md) and check your connections with a multimeter before plugging into power.
 3. Plug in 9V–15V DC power (bench PSU, 12V battery, etc.) into the power input jack.
 4. Plug your 12V loads (IR illuminator, UV light, etc.) into the switched DC output jack.

@@ -21,3 +21,6 @@ __pycache__/
 
 # Intermediate layout drafts
 board_layout.png
+
+# Local Lab Inventory Export
+LAB_INVENTORY.md
