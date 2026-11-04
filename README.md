@@ -52,6 +52,14 @@ Two ready-to-flash examples are in the [`examples/`](examples/) folder:
   * Whenever you press the button, it fires a sequence of **three 0.5-second pulses** (0.5s ON, 0.5s OFF x 3) and returns to silent idle.
 * **Use case**: Great when you want to drop sync marks manually at the start and end of an observation run without any periodic beeps disturbing the site.
 
+### 4. [UV Duty-Cycler with Live PC Serial Logging](examples/04_uv_duty_cycle_pc_logger/04_uv_duty_cycle_pc_logger.ino)
+* **What it does**:
+  * Same 3-minute / 15-second UV duty-cycling behavior as Example 02, but maintains an active USB serial connection to your PC.
+  * Emits structured event messages whenever the lights switch ON or OFF, or the mode is toggled.
+  * Includes a companion Python script (`logger.py`) that captures the exact local PC wall-clock timestamp (millisecond precision), prints live status to the console, and appends rows to a CSV spreadsheet (`blinkfyr_log.csv`).
+  * Also supports interactive keyboard commands from your PC (e.g. sending `'t'` to toggle modes remotely).
+* **Use case**: Lab or field-station experiments where a laptop or Raspberry Pi records the exact real-time timestamps of every lighting cycle alongside video and sensor logs.
+
 ---
 
 ## Circuit Schematic
@@ -111,6 +119,7 @@ The prototype was soldered on a standard Jaycar HP9556 experimenter board. Becau
    * Periodic camera/audio sync: `examples/01_camera_audiomoth_sync/01_camera_audiomoth_sync.ino`
    * Attractor duty cycler: `examples/02_uv_lepiled_duty_cycle/02_uv_lepiled_duty_cycle.ino`
    * Manual on-demand sync: `examples/03_manual_audiomoth_sync/03_manual_audiomoth_sync.ino`
+   * Duty cycler + PC timestamp logging: `examples/04_uv_duty_cycle_pc_logger/04_uv_duty_cycle_pc_logger.ino` (paired with `logger.py`)
 2. Wire up the board according to the [layout guide](docs/BOARD_LAYOUT.md) and check your connections with a multimeter before plugging into power.
 3. Plug in 9V–15V DC power (bench PSU, 12V battery, etc.) into the power input jack.
 4. Plug your 12V loads (IR illuminator, UV light, etc.) into the switched DC output jack.
