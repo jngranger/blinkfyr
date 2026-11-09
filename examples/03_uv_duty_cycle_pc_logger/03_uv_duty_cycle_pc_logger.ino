@@ -1,5 +1,5 @@
 /*
- * blinkfyr - Example 04: UV LepiLED Duty-Cycler with Live PC Serial Logging
+ * blinkfyr - Example 03: UV LepiLED Duty-Cycler with Live PC Serial Logging
  * https://github.com/rlwilmin-byte/blinkfyr
  * 
  * Hardware: blinkfyr (Arduino Uno + IRF520 MOSFET + LTV-4N35 Optocoupler)

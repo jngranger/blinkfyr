@@ -1,4 +1,4 @@
-# Example 04: UV LepiLED Duty-Cycler with Live PC Serial Logging
+# Example 03: UV LepiLED Duty-Cycler with Live PC Serial Logging
 
 Runs the exact same UV LepiLED / IR floodlamp duty-cycling schedule as Example 02, but with **live USB serial event reporting** so a connected PC or laptop can log every ON/OFF transition with wall-clock millisecond timestamps.
 
@@ -23,7 +23,7 @@ Runs the exact same UV LepiLED / IR floodlamp duty-cycling schedule as Example 0
 ## Quickstart
 
 ### 1. Flash the Sketch
-1. Open `04_uv_duty_cycle_pc_logger.ino` in the Arduino IDE.
+1. Open `03_uv_duty_cycle_pc_logger.ino` in the Arduino IDE.
 2. Select your Arduino Uno port and click **Upload** ($\rightarrow$).
 
 ### 2. Run the Python Logger

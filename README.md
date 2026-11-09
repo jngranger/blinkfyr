@@ -27,14 +27,17 @@ It was originally built to synchronize an **AudioMoth** ultrasound recorder with
 
 ## Example Arduino Sketches
 
-Two ready-to-flash examples are in the [`examples/`](examples/) folder:
+Ready-to-flash examples are in the [`examples/`](examples/) folder:
 
 ### 1. [Camera & AudioMoth Time-Sync Beacon](examples/01_camera_audiomoth_sync/01_camera_audiomoth_sync.ino)
 * **What it does**: 
-  * Flashes the 12V output and beeps a 1-second pulse once every **30 minutes**.
-  * Boots with 3 pulses so you know it's alive and can mark when you started the run.
-  * Pressing the button on the board triggers 3 pulses anytime on demand without messing up the 30-minute timer.
-* **Use case**: Put it in front of your camera trap and AudioMoth to leave periodic audio/visual sync marks throughout long recording sessions.
+  * Consolidated multimodal synchronization beacon with an unambiguous pulse encoding hierarchy:
+    * **3 Long Beeps (3x 1.0s)** on device boot or script startup (T=0 calibration).
+    * **1 Long Beep (1x 1.0s)** automatically every **30 minutes** (drift-free periodic heartbeat).
+    * **2 Short Beeps (2x 250ms)** on manual button press (drops on-demand marks without disrupting the 30-min schedule).
+  * Simultaneously flashes the 12V DC output (IR floodlamp / on-board LED) and sounds the 4.0 kHz piezo buzzer.
+  * Can be deployed completely standalone in the field on battery power, or connected to a PC/laptop via USB with the included [`logger.py`](examples/01_camera_audiomoth_sync/logger.py) companion script to record millisecond PC timestamps to CSV (`blinkfyr_sync_log.csv`).
+* **Use case**: Put it in front of your camera trap and AudioMoth to record identical acoustic and optical sync marks for effortless sub-millisecond post-hoc alignment.
 
 ### 2. [UV LepiLED Duty-Cycler & Cam Sync](examples/02_uv_lepiled_duty_cycle/02_uv_lepiled_duty_cycle.ino)
 * **What it does**: 
@@ -44,15 +47,7 @@ Two ready-to-flash examples are in the [`examples/`](examples/) folder:
   * Silent during steady ON and OFF periods (beeps only when switching modes or booting).
 * **Use case**: Comparing moth arrival rates under different lighting schedules while using the IR flash to let a night camera track exact on/off timestamps.
 
-### 3. [Manual AudioMoth & Camera Sync Beacon](examples/03_manual_audiomoth_sync/03_manual_audiomoth_sync.ino)
-* **What it does**:
-  * Completely on-demand manual sync.
-  * Boots completely silent and dark (no startup beeps or flashes).
-  * No automatic periodic timer.
-  * Whenever you press the button, it fires a sequence of **three 0.5-second pulses** (0.5s ON, 0.5s OFF x 3) and returns to silent idle.
-* **Use case**: Great when you want to drop sync marks manually at the start and end of an observation run without any periodic beeps disturbing the site.
-
-### 4. [UV Duty-Cycler with Live PC Serial Logging](examples/04_uv_duty_cycle_pc_logger/04_uv_duty_cycle_pc_logger.ino)
+### 3. [UV Duty-Cycler with Live PC Serial Logging](examples/03_uv_duty_cycle_pc_logger/03_uv_duty_cycle_pc_logger.ino)
 * **What it does**:
   * Same 3-minute / 15-second UV duty-cycling behavior as Example 02, but maintains an active USB serial connection to your PC.
   * Emits structured event messages whenever the lights switch ON or OFF, or the mode is toggled.
@@ -116,10 +111,9 @@ The prototype was soldered on a standard Jaycar HP9556 experimenter board. Becau
 ## Quickstart
 
 1. Flash your chosen sketch using the Arduino IDE:
-   * Periodic camera/audio sync: `examples/01_camera_audiomoth_sync/01_camera_audiomoth_sync.ino`
+   * Periodic camera/audio sync: `examples/01_camera_audiomoth_sync/01_camera_audiomoth_sync.ino` (paired with `logger.py` if PC logging is desired)
    * Attractor duty cycler: `examples/02_uv_lepiled_duty_cycle/02_uv_lepiled_duty_cycle.ino`
-   * Manual on-demand sync: `examples/03_manual_audiomoth_sync/03_manual_audiomoth_sync.ino`
-   * Duty cycler + PC timestamp logging: `examples/04_uv_duty_cycle_pc_logger/04_uv_duty_cycle_pc_logger.ino` (paired with `logger.py`)
+   * Duty cycler + PC timestamp logging: `examples/03_uv_duty_cycle_pc_logger/03_uv_duty_cycle_pc_logger.ino` (paired with `logger.py`)
 2. Wire up the board according to the [layout guide](docs/BOARD_LAYOUT.md) and check your connections with a multimeter before plugging into power.
 3. Plug in 9V–15V DC power (bench PSU, 12V battery, etc.) into the power input jack.
 4. Plug your 12V loads (IR illuminator, UV light, etc.) into the switched DC output jack.
